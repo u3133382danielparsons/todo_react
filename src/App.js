@@ -3,6 +3,25 @@ import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
+  constructor(){
+    super()
+    this.state = {
+      todos: [
+        {id: 1, name:'Learn JSX',isComplete:true},
+        {id: 2, name:'Build an Awesome App',isComplete:false},
+        {id: 3, name:'Ship It!',isComplete:false}
+      ],
+      currentTodo: ''
+    }
+    this.handleInputChange = this.handleInputChange.bind(this)
+  }
+
+  handleInputChange(evt){
+    this.setState({
+      currentTodo: evt.target.value
+    })
+
+  }
   render() {
     return (
       <div className="App">
@@ -12,18 +31,18 @@ class App extends Component {
         </div>
           <div className="Todo-App">
             <form>
-              <input type="text" />
+              <input type="text" onChange={this.handleInputChange} value={this.state.currentTodo} />
             </form>
             <div className="Todo-List">
               <ul>
-                <li><input type="checkbox" />Learn JSX</li>
-                <li><input type="checkbox" />Build an Awesome App</li>
-                <li><input type="checkbox" />Ship It!</li>
+                {this.state.todos.map(todo =>
+                  <li key={todo.id}><input type="checkbox" defaultChecked={todo.isComplete} />
+                    {todo.name}
+                  </li>)}
+
               </ul>
             </div>
-
           </div>
-
       </div>
     );
   }
