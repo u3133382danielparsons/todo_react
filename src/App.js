@@ -1,6 +1,9 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react'
+import logo from './logo.svg'
+import './App.css'
+import {TodoForm, TodoList} from './components/todo'
+import {addTodo, generateId} from './lib/todoHelpers'
+
 
 class App extends Component {
   constructor(){
@@ -14,8 +17,18 @@ class App extends Component {
       currentTodo: ''
     }
     this.handleInputChange = this.handleInputChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
   }
-
+  handleSubmit(evt){
+    evt.preventDefault()
+    const newId = generateId()
+    const newTodo = {id: newId, name: this.state.currentTodo, isComplete: false}
+    const updatedTodos = addTodo(this.state.todos, newTodo)
+    this.setState({
+      todos: updatedTodos,
+      currentTodo: ''
+    })
+  }
   handleInputChange(evt){
     this.setState({
       currentTodo: evt.target.value
@@ -30,18 +43,12 @@ class App extends Component {
           <h2>React Todos</h2>
         </div>
           <div className="Todo-App">
-            <form>
-              <input type="text" onChange={this.handleInputChange} value={this.state.currentTodo} />
-            </form>
-            <div className="Todo-List">
-              <ul>
-                {this.state.todos.map(todo =>
-                  <li key={todo.id}><input type="checkbox" defaultChecked={todo.isComplete} />
-                    {todo.name}
-                  </li>)}
-
-              </ul>
-            </div>
+            <TodoForm
+              handleInputChange={this.handleInputChange}
+              currentTodo={this.state.currentTodo}
+              handleSubmit={this.handleSubmit}
+            />
+            <TodoList todos={this.state.todos} />
           </div>
       </div>
     );
